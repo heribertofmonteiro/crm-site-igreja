@@ -10,7 +10,7 @@
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Lista de Estudantes</h3>
-        @can('education.students.create')
+        @can('education_students.create')
         <div class="card-tools">
             <a href="{{ route('education.students.create') }}" class="btn btn-primary btn-sm">
                 <i class="fas fa-plus"></i> Novo Estudante
@@ -36,20 +36,20 @@
                     <td>{{ $student->id }}</td>
                     <td>{{ $student->name }}</td>
                     <td>{{ $student->birth_date->format('d/m/Y') }}</td>
-                    <td>{{ $student->schoolClass->name ?? '-' }}</td>
-                    <td>{{ $student->parent->name ?? '-' }}</td>
+                    <td>{{ $student->schoolClass?->name ?? '-' }}</td>
+                    <td>{{ $student->parent?->name ?? '-' }}</td>
                     <td>
-                        @can('education.students.view')
+                        @can('education_students.view')
                         <a href="{{ route('education.students.show', $student) }}" class="btn btn-info btn-sm">
                             <i class="fas fa-eye"></i>
                         </a>
                         @endcan
-                        @can('education.students.edit')
+                        @can('education_students.edit')
                         <a href="{{ route('education.students.edit', $student) }}" class="btn btn-warning btn-sm">
                             <i class="fas fa-edit"></i>
                         </a>
                         @endcan
-                        @can('education.students.delete')
+                        @can('education_students.delete')
                         <form action="{{ route('education.students.destroy', $student) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')

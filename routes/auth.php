@@ -11,6 +11,8 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Auth\UsernameRecoveryController;
+
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
@@ -33,6 +35,13 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+
+    // Username Recovery Routes
+    Route::get('username/recover', [UsernameRecoveryController::class, 'showRecoverForm'])
+        ->name('username.recover');
+
+    Route::post('username/recover', [UsernameRecoveryController::class, 'sendRecoveryLink'])
+        ->name('username.recover.send');
 });
 
 Route::middleware('auth')->group(function () {

@@ -1,0 +1,176 @@
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import { route } from 'ziggy-js';
+
+const email = ref('');
+const password = ref('');
+const remember = ref(false);
+const errors = ref<Record<string, string[]>>({});
+const processing = ref(false);
+const status = ref('');
+
+// Props passed from Blade if any
+const props = defineProps({
+    status: String,
+    systemName: {
+        type: String,
+        default: 'Igreja On Line',
+    },
+    churchName: {
+        type: String,
+        default: '',
+    },
+});
+
+onMounted(() => {
+    if (props.status) {
+        status.value = props.status;
+    }
+});
+
+const submit = async () => {
+    processing.value = true;
+    errors.value = {};
+    
+    try {
+        // We use standard web session auth; Axios will handle CSRF via headers 
+        // configured in bootstrap.js. We add _token to the body as an extra fallback.
+        await axios.post(route('login'), {
+            email: email.value,
+            password: password.value,
+            remember: remember.value,
+            _token: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
+        });
+        
+        // Redirect on success
+        window.location.href = route('dashboard');
+    } catch (error: any) {
+        if (error.response?.data?.errors) {
+            errors.value = error.response.data.errors;
+        } else {
+            console.error('Login failed', error);
+        }
+    } finally {
+        processing.value = false;
+    }
+};
+</script>
+
+<template>
+    <div class="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat relative p-4" 
+         style="background-image: url('/images/login-bg.png')">
+        
+        <!-- Overlay for darker background -->
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+
+        <!-- Login Card -->
+        <div class="relative z-10 w-full max-w-md">
+            <div class="bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] rounded-3xl overflow-hidden p-8 sm:p-12 transition-all duration-500 hover:shadow-amber-500/10">
+                
+                <!-- Logo & Header -->
+                <div class="text-center mb-10">
+                    <div class="inline-flex items-center justify-center p-3 mb-4 rounded-2xl bg-gradient-to-br from-amber-500/30 to-purple-500/30 border border-amber-500/30">
+                        <i class="fas fa-church text-amber-400 text-3xl"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold text-white tracking-tight mb-2 font-serif"
+                        style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                        {{ systemName }}
+                    </h1>
+                    <p class="text-amber-200/70 text-sm font-medium tracking-wide uppercase">Acesso Administrativo</p>
+                    <p v-if="churchName" class="text-white/50 text-xs mt-1">{{ churchName }}</p>
+                </div>
+
+                <div v-if="status" class="mb-6 p-4 rounded-xl bg-green-500/20 border border-green-500/30 text-green-300 text-sm">
+                    {{ status }}
+                </div>
+
+                <form @submit.prevent="submit" class="space-y-6">
+                    <!-- Email -->
+                    <div class="space-y-2">
+                        <label for="email" class="block text-sm font-medium text-amber-100/80">E-mail</label>
+                        <div class="relative">
+                            <input 
+                                id="email" 
+                                v-model="email"
+                                type="email" 
+                                required 
+                                autofocus
+                                class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all"
+                                placeholder="exemplo@igreja.com"
+                            >
+                        </div>
+                        <p v-if="errors.email" class="text-red-400 text-xs mt-1">{{ errors.email[0] }}</p>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <label for="password" class="block text-sm font-medium text-amber-100/80">Senha</label>
+                            <!-- Link de recuperação de senha desativado para uso interno -->
+                            <span class="text-xs text-white/20">Sistema Interno</span>
+                        </div>
+                        <div class="relative">
+                            <input 
+                                id="password" 
+                                v-model="password"
+                                type="password" 
+                                required 
+                                class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all"
+                                placeholder="••••••••"
+                            >
+                        </div>
+                        <p v-if="errors.password" class="text-red-400 text-xs mt-1">{{ errors.password[0] }}</p>
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="flex items-center">
+                        <input 
+                            id="remember_me" 
+                            v-model="remember"
+                            type="checkbox" 
+                            class="w-4 h-4 rounded border-white/10 bg-white/5 text-amber-600 focus:ring-amber-500/50 transition-all"
+                        >
+                        <label for="remember_me" class="ml-2 block text-sm text-white/60 hover:text-white transition-colors cursor-pointer">Lembrar-me</label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button 
+                        type="submit" 
+                        :disabled="processing"
+                        class="w-full bg-amber-600 hover:bg-amber-500 disabled:bg-amber-800 disabled:opacity-50 text-white font-bold py-4 rounded-xl shadow-lg shadow-amber-900/20 transform transition-all active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+                    >
+                        <span v-if="processing" class="flex items-center justify-center">
+                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Processando...
+                        </span>
+                        <span v-else>Entrar</span>
+                    </button>
+                </form>
+
+                <!-- Footer -->
+                <div class="mt-8 text-center">
+                    <p class="text-sm text-white/40 italic mb-4">"Pois onde estiverem dois ou três reunidos em meu nome..."</p>
+                    <div class="flex justify-center gap-4 flex-wrap">
+                        <a href="/register" class="text-amber-500 hover:text-amber-400 text-sm transition-colors">Cadastrar-se</a>
+                        <span class="text-white/20">|</span>
+                        <a href="/username/recover" class="text-amber-500 hover:text-amber-400 text-sm transition-colors">Esqueci meu usuário</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style scoped>
+.font-serif {
+    font-family: 'Cinzel', serif;
+}
+
+:deep(.font-sans) {
+    font-family: 'Inter', sans-serif;
+}
+</style>

@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Document;
-use App\Models\Member;
-use App\Models\ChurchEvent;
+use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission:documents.view')->only(['index', 'show']);
+        $this->middleware('permission:documents.view')->only(['index', 'show', 'download']);
         $this->middleware('permission:documents.create')->only(['create', 'store']);
         $this->middleware('permission:documents.edit')->only(['edit', 'update']);
         $this->middleware('permission:documents.delete')->only('destroy');
@@ -23,7 +23,7 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        $documents = Document::with(['member', 'churchEvent'])->paginate(10);
+        $documents = Document::with('event')->paginate(10);
         return view('admin.documents.index', compact('documents'));
     }
 
@@ -32,9 +32,8 @@ class DocumentController extends Controller
      */
     public function create()
     {
-        $members = Member::all();
-        $events = ChurchEvent::all();
-        return view('admin.documents.create', compact('members', 'events'));
+        $events = Event::all();
+        return view('admin.documents.create', compact('events'));
     }
 
     /**
@@ -44,16 +43,24 @@ class DocumentController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'type' => 'required|in:certificate,report,contract,other',
-            'file_path' => 'required|string|max:255',
-            'member_id' => 'nullable|exists:members,id',
-            'church_event_id' => 'nullable|exists:church_events,id',
+            'file' => 'required|file|max:10240', // 10MB
+            'event_id' => 'nullable|exists:events,id',
         ]);
 
-        Document::create($request->all());
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store('documents');
+            
+            Document::create([
+                'title' => $request->title,
+                'file_path' => $path,
+                'church_event_id' => $request->event_id,
+            ]);
 
-        return redirect()->route('admin.documents.index')
-            ->with('success', 'Documento criado com sucesso.');
+            return redirect()->route('admin.documents.index')
+                ->with('success', 'Documento enviado com sucesso.');
+        }
+
+        return back()->with('error', 'Falha ao enviar arquivo.');
     }
 
     /**
@@ -69,9 +76,8 @@ class DocumentController extends Controller
      */
     public function edit(Document $document)
     {
-        $members = Member::all();
-        $events = ChurchEvent::all();
-        return view('admin.documents.edit', compact('document', 'members', 'events'));
+        $events = Event::all();
+        return view('admin.documents.edit', compact('document', 'events'));
     }
 
     /**
@@ -81,13 +87,13 @@ class DocumentController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'type' => 'required|in:certificate,report,contract,other',
-            'file_path' => 'required|string|max:255',
-            'member_id' => 'nullable|exists:members,id',
-            'church_event_id' => 'nullable|exists:church_events,id',
+            'event_id' => 'nullable|exists:events,id',
         ]);
 
-        $document->update($request->all());
+        $document->update([
+            'title' => $request->title,
+            'church_event_id' => $request->event_id,
+        ]);
 
         return redirect()->route('admin.documents.index')
             ->with('success', 'Documento atualizado com sucesso.');
@@ -98,9 +104,25 @@ class DocumentController extends Controller
      */
     public function destroy(Document $document)
     {
+        if (Storage::exists($document->file_path)) {
+            Storage::delete($document->file_path);
+        }
+
         $document->delete();
 
         return redirect()->route('admin.documents.index')
             ->with('success', 'Documento removido com sucesso.');
+    }
+
+    /**
+     * Download the specified resource.
+     */
+    public function download(Document $document)
+    {
+        if (Storage::exists($document->file_path)) {
+            return Storage::download($document->file_path, $document->title);
+        }
+
+        return back()->with('error', 'Arquivo não encontrado.');
     }
 }

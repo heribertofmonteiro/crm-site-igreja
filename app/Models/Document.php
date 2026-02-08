@@ -14,13 +14,8 @@ class Document extends Model
         'church_event_id',
     ];
 
-    public function member()
+    public function event()
     {
-        return $this->belongsTo(Member::class);
-    }
-
-    public function churchEvent()
-    {
-        return $this->belongsTo(ChurchEvent::class);
+        return $this->belongsTo(Event::class, 'church_event_id');
     }
 }

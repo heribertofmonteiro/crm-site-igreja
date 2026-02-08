@@ -11,7 +11,7 @@
     <div class="card-header">
         <h3 class="card-title">Lista de Planos de Plantação</h3>
         <div class="card-tools">
-            <a href="{{ route('expansion.church-planting-plans.create') }}" class="btn btn-primary btn-sm">
+            <a href="{{ route('expansion.plans.create') }}" class="btn btn-primary btn-sm">
                 <i class="fas fa-plus"></i> Novo Plano
             </a>
         </div>
@@ -43,13 +43,13 @@
                     </td>
                     <td>{{ $plan->leader ? $plan->leader->name : '-' }}</td>
                     <td>
-                        <a href="{{ route('expansion.church-planting-plans.show', $plan) }}" class="btn btn-info btn-sm">
+                        <a href="{{ route('expansion.plans.show', $plan) }}" class="btn btn-info btn-sm">
                             <i class="fas fa-eye"></i>
                         </a>
-                        <a href="{{ route('expansion.church-planting-plans.edit', $plan) }}" class="btn btn-warning btn-sm">
+                        <a href="{{ route('expansion.plans.edit', $plan) }}" class="btn btn-warning btn-sm">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <form action="{{ route('expansion.church-planting-plans.destroy', $plan) }}" method="POST" style="display: inline;">
+                        <form action="{{ route('expansion.plans.destroy', $plan) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza?')">

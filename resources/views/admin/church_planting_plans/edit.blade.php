@@ -12,7 +12,7 @@
         <h3 class="card-title">Editar Plano de Plantação</h3>
     </div>
     <div class="card-body">
-        <form action="{{ route('expansion.church-planting-plans.update', $plan) }}" method="POST">
+        <form action="{{ route('expansion.plans.update', $plan) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="form-group">
@@ -57,7 +57,7 @@
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Atualizar</button>
-            <a href="{{ route('expansion.church-planting-plans.index') }}" class="btn btn-secondary">Cancelar</a>
+            <a href="{{ route('expansion.plans.index') }}" class="btn btn-secondary">Cancelar</a>
         </form>
     </div>
 </div>

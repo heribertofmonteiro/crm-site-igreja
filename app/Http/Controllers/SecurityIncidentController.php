@@ -4,16 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\SecurityIncident;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SecurityIncidentController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission:security_incident.view')->only(['index', 'show']);
-        $this->middleware('permission:security_incident.create')->only(['create', 'store']);
-        $this->middleware('permission:security_incident.edit')->only(['edit', 'update']);
-        $this->middleware('permission:security_incident.delete')->only('destroy');
+        $this->middleware('permission:security_incidents.view')->only(['index', 'show']);
+        $this->middleware('permission:security_incidents.create')->only(['create', 'store']);
+        $this->middleware('permission:security_incidents.edit')->only(['edit', 'update']);
+        $this->middleware('permission:security_incidents.delete')->only('destroy');
     }
 
     /**
@@ -51,7 +52,7 @@ class SecurityIncidentController extends Controller
             'description' => $request->description,
             'severity' => $request->severity,
             'status' => $request->status,
-            'reported_by' => auth()->id(),
+            'reported_by' => Auth::id(),
             'reported_at' => now(),
             'resolved_at' => $request->status === 'resolved' ? now() : null,
         ]);

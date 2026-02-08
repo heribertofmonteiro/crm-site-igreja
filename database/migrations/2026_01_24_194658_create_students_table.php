@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->date('birth_date');
             $table->string('contact_info')->nullable();
-            $table->foreignId('class_id')->constrained('classes')->onDelete('cascade');
+            $table->foreignId('class_id')->constrained('school_classes')->onDelete('cascade');
             $table->foreignId('parent_id')->nullable()->constrained('members')->onDelete('set null');
             $table->timestamps();
         });

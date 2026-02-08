@@ -7,17 +7,27 @@
 @stop
 
 @section('content')
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Lista de Membros</h3>
-        @can('members.create')
-        <div class="card-tools">
-            <a href="{{ route('admin.members.create') }}" class="btn btn-primary btn-sm">
-                <i class="fas fa-plus"></i> Novo Membro
-            </a>
+<div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Total de Membros Ativos</h5>
+                <h2 class="text-primary">{{ $activeMembersCount }}</h2>
+            </div>
         </div>
-        @endcan
     </div>
+    <div class="col-md-9">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Lista de Membros</h3>
+                @can('members.create')
+                <div class="card-tools">
+                    <a href="{{ route('admin.members.create') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Novo Membro
+                    </a>
+                </div>
+                @endcan
+            </div>
     <div class="card-body">
         <table class="table table-bordered table-striped">
             <thead>
@@ -66,6 +76,8 @@
             </tbody>
         </table>
         {{ $members->links() }}
+            </div>
+        </div>
     </div>
 </div>
 @stop

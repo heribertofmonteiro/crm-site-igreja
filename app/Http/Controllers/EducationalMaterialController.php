@@ -11,10 +11,10 @@ class EducationalMaterialController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission:education.materials.view')->only(['index', 'show']);
-        $this->middleware('permission:education.materials.create')->only(['create', 'store']);
-        $this->middleware('permission:education.materials.edit')->only(['edit', 'update']);
-        $this->middleware('permission:education.materials.delete')->only('destroy');
+        $this->middleware('permission:education_materials.view')->only(['index', 'show']);
+        $this->middleware('permission:education_materials.create')->only(['create', 'store']);
+        $this->middleware('permission:education_materials.edit')->only(['edit', 'update']);
+        $this->middleware('permission:education_materials.delete')->only('destroy');
     }
 
     /**

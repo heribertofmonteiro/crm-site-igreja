@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
-use App\Models\Transaction;
-use App\Models\ChurchEvent;
+use App\Models\FinancialTransaction;
+use App\Models\Event;
+use App\Models\ChurchEvent; // Keeping for now if needed, but intended to remove
 use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
@@ -45,14 +46,14 @@ class DashboardController extends Controller
     private function getTotalDonations()
     {
         return Cache::remember('dashboard.total_donations', 3600, function () {
-            return Transaction::where('type', 'income')->sum('amount');
+            return FinancialTransaction::income()->sum('amount');
         });
     }
 
     private function getTotalEvents()
     {
         return Cache::remember('dashboard.total_events', 3600, function () {
-            return ChurchEvent::count();
+            return Event::count();
         });
     }
 
@@ -67,9 +68,14 @@ class DashboardController extends Controller
     {
         return Cache::remember('dashboard.donations_chart', 3600, function () {
             // Dados para gráfico de barras/linhas: doações por mês
-            $data = Transaction::selectRaw('YEAR(date) as year, MONTH(date) as month, SUM(amount) as total')
-                ->where('type', 'income')
-                ->where('date', '>=', now()->subMonths(12))
+            $driver = \Illuminate\Support\Facades\DB::getDriverName();
+            $dateSelect = $driver === 'sqlite' 
+                ? "strftime('%Y', transaction_date) as year, strftime('%m', transaction_date) as month"
+                : "YEAR(transaction_date) as year, MONTH(transaction_date) as month";
+
+            $data = FinancialTransaction::selectRaw($dateSelect . ', SUM(amount) as total')
+                ->income()
+                ->where('transaction_date', '>=', now()->subMonths(12))
                 ->groupBy('year', 'month')
                 ->orderBy('year')
                 ->orderBy('month')
@@ -89,9 +95,9 @@ class DashboardController extends Controller
     private function getEventsChartData()
     {
         return Cache::remember('dashboard.events_chart', 3600, function () {
-            // Gráfico de pizza: eventos por categoria (assumindo que há uma coluna category, senão usar tipo)
-            $data = ChurchEvent::selectRaw('COUNT(*) as count')
-                ->groupBy('title') // ou category se existir
+            // Gráfico de pizza: eventos por categoria
+            $data = Event::selectRaw('COUNT(*) as count, title')
+                ->groupBy('title')
                 ->get();
 
             $labels = $data->pluck('title')->toArray();
@@ -105,7 +111,12 @@ class DashboardController extends Controller
     {
         return Cache::remember('dashboard.baptisms_chart', 3600, function () {
             // Gráfico de linhas: batismos por ano
-            $data = Member::selectRaw('YEAR(baptism_date) as year, COUNT(*) as count')
+            $driver = \Illuminate\Support\Facades\DB::getDriverName();
+            $yearSelect = $driver === 'sqlite' 
+                ? "strftime('%Y', baptism_date) as year"
+                : "YEAR(baptism_date) as year";
+
+            $data = Member::selectRaw($yearSelect . ', COUNT(*) as count')
                 ->whereNotNull('baptism_date')
                 ->groupBy('year')
                 ->orderBy('year')

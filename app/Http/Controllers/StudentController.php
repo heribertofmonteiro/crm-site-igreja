@@ -12,10 +12,10 @@ class StudentController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission:education.students.view')->only(['index', 'show']);
-        $this->middleware('permission:education.students.create')->only(['create', 'store']);
-        $this->middleware('permission:education.students.edit')->only(['edit', 'update']);
-        $this->middleware('permission:education.students.delete')->only('destroy');
+        $this->middleware('permission:education_students.view')->only(['index', 'show']);
+        $this->middleware('permission:education_students.create')->only(['create', 'store']);
+        $this->middleware('permission:education_students.edit')->only(['edit', 'update']);
+        $this->middleware('permission:education_students.delete')->only('destroy');
     }
 
     /**

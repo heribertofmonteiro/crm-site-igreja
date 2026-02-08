@@ -11,7 +11,7 @@
     <div class="card-header">
         <h3 class="card-title">{{ $class->name }}</h3>
         <div class="card-tools">
-            @can('education.classes.edit')
+            @can('education_classes.edit')
             <a href="{{ route('education.classes.edit', $class) }}" class="btn btn-warning btn-sm">
                 <i class="fas fa-edit"></i> Editar
             </a>

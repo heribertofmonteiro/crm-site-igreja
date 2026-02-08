@@ -11,10 +11,10 @@
     <div class="card-header">
         <h3 class="card-title">{{ $plan->name }}</h3>
         <div class="card-tools">
-            <a href="{{ route('expansion.church-planting-plans.edit', $plan) }}" class="btn btn-warning btn-sm">
+            <a href="{{ route('expansion.plans.edit', $plan) }}" class="btn btn-warning btn-sm">
                 <i class="fas fa-edit"></i> Editar
             </a>
-            <a href="{{ route('expansion.church-planting-plans.index') }}" class="btn btn-secondary btn-sm">
+            <a href="{{ route('expansion.plans.index') }}" class="btn btn-secondary btn-sm">
                 <i class="fas fa-arrow-left"></i> Voltar
             </a>
         </div>

@@ -530,3 +530,386 @@ Roteiro prático para organizar a igreja do zero à maturidade.
     *   [ ] Utilizar KPIs para tomada de decisão.
     *   [ ] Estruturar **Agente: Ação Social** com projetos robustos.
     *   [ ] Preparar liderança para plantação de novas igrejas ou novos cultos.
+
+---
+
+## 📋 TAREFAS PENDENTES PARA CONCLUSÃO DO SISTEMA
+
+### 🎯 Status Atual: 85% Completo
+
+#### 🚨 **Módulos Críticos Faltantes (15%)**
+
+**1. COMUNICAÇÃO E MÍDIA - 20% FALTANTE**
+
+**Controllers Faltantes:**
+- [ ] `MediaController.php` - Upload/gerenciamento de arquivos mídia
+- [ ] `MediaPlaylistController.php` - Criação de playlists de vídeos/áudios
+- [ ] `MediaCategoryController.php` - Categorias de mídia (cultos, eventos, pregações)
+- [ ] `LiveStreamController.php` - Controle de transmissões ao vivo
+
+**Models Faltantes:**
+- [ ] `Media.php` - Armazenar informações de arquivos (título, descrição, tipo, tamanho)
+- [ ] `MediaCategory.php` - Categorias organizacionais
+- [ ] `MediaPlaylist.php` - Playlists organizadas
+- [ ] `LiveStream.php` - Configurações de transmissão
+
+**Migrations Faltantes:**
+- [ ] `create_medias_table.php` - id, title, description, file_path, file_type, file_size, duration, media_category_id, created_at
+- [ ] `create_media_categories_table.php` - id, name, description, color, icon
+- [ ] `create_media_playlists_table.php` - id, name, description, is_active
+- [ ] `create_media_playlist_items_table.php` - id, media_playlist_id, media_id, order
+- [ ] `create_live_streams_table.php` - id, title, description, stream_key, platform, scheduled_at, ended_at
+
+**Views Faltantes:**
+- [ ] `/resources/views/admin/media/index.blade.php` - Listagem geral de mídias
+- [ ] `/resources/views/admin/media/create.blade.php` - Form upload
+- [ ] `/resources/views/admin/media/show.blade.php` - Player de vídeo/áudio
+- [ ] `/resources/views/admin/media/categories/index.blade.php` - Gestão de categorias
+- [ ] `/resources/views/admin/media/playlists/index.blade.php` - Gestão de playlists
+- [ ] `/resources/views/admin/media/livestreams/index.blade.php` - Controle de transmissões
+
+**Features Faltantes:**
+- [ ] Upload de múltiplos arquivos (drag & drop)
+- [ ] Processamento automático de vídeos (compressão)
+- [ ] Extração automática de thumbnail
+- [ ] Player integrado com controles de velocidade
+- [ ] Sistema de busca avançada por título/descrição
+- [ ] Agendamento de publicação automática
+- [ ] Integração com YouTube/Facebook para streaming
+- [ ] Relatórios de visualização/métricas
+
+**2. LOUVOR E ADORAÇÃO - 15% FALTANTE**
+
+**Controllers Faltantes:**
+- [ ] `WorshipSongController.php` - CRUD de músicas
+- [ ] `WorshipSetlistController.php` - Listas de músicas por culto
+- [ ] `WorshipTeamController.php` - Gestão de equipes de louvor
+- [ ] `WorshipRehearsalController.php` - Controle de ensaios
+
+**Models Faltantes:**
+- [ ] `WorshipSong.php` - Informações da música (título, artista, tom, letra, cifra)
+- [ ] `WorshipSetlist.php` - Lista de músicas para culto específico
+- [ ] `WorshipSetlistItem.php` - Itens da setlist (música + ordem)
+- [ ] `WorshipTeam.php` - Equipes de ministério
+- [ ] `WorshipRehearsal.php` - Agendamento de ensaios
+
+**Migrations Faltantes:**
+- [ ] `create_worship_songs_table.php` - id, title, artist, key, bpm, duration, lyrics, chords, is_active
+- [ ] `create_worship_setlists_table.php` - id, church_event_id, date, theme, notes
+- [ ] `create_worship_setlist_items_table.php` - id, worship_setlist_id, worship_song_id, order, notes
+- [ ] `create_worship_teams_table.php` - id, name, description, leader_id, is_active
+- [ ] `create_worship_rehearsals_table.php` - id, worship_team_id, scheduled_at, location, notes
+
+**Views Faltantes:**
+- [ ] `/resources/views/admin/worship/songs/index.blade.php` - Listagem de músicas
+- [ ] `/resources/views/admin/worship/songs/create.blade.php` - Cadastro de música
+- [ ] `/resources/views/admin/worship/songs/show.blade.php` - Visualização com letra/cifra
+- [ ] `/resources/views/admin/worship/setlists/index.blade.php` - Histórico de setlists
+- [ ] `/resources/views/admin/worship/setlists/create.blade.php` - Criar setlist
+- [ ] `/resources/views/admin/worship/teams/index.blade.php` - Gestão de equipes
+- [ ] `/resources/views/admin/worship/rehearsals/index.blade.php` - Agenda de ensaios
+
+**Features Faltantes:**
+- [ ] Importação de cifras automaticamente (API externa)
+- [ ] Transposição automática de tom
+- [ ] Geração de PDF com cifras
+- [ ] Histórico de músicas mais utilizadas
+- [ ] Sistema de busca por título/artista/tema
+- [ ] Integração com planejamento de culto
+- [ ] Controle de disponibilidade de músicos
+- [ ] Relatórios de frequência de ensaios
+
+**3. EVENTOS - 15% FALTANTE**
+
+**Controllers Faltantes:**
+- [ ] `EventChecklistController.php` - Checklists para eventos
+- [ ] `EventEvaluationController.php` - Avaliação pós-evento
+- [ ] `EventTaskController.php` - Gestão de tarefas do evento
+- [ ] `EventResourceController.php` - Gestão de recursos (equipamentos)
+
+**Models Faltantes:**
+- [ ] `EventChecklist.php` - Modelos de checklist
+- [ ] `EventChecklistItem.php` - Itens do checklist
+- [ ] `EventChecklistExecution.php` - Execução do checklist
+- [ ] `EventEvaluation.php` - Formulários de avaliação
+- [ ] `EventEvaluationResponse.php` - Respostas das avaliações
+- [ ] `EventTask.php` - Tarefas específicas do evento
+- [ ] `EventResource.php` - Recursos necessários
+
+**Migrations Faltantes:**
+- [ ] `create_event_checklists_table.php` - id, name, description, event_type_id
+- [ ] `create_event_checklist_items_table.php` - id, event_checklist_id, description, is_required, order
+- [ ] `create_event_checklist_executions_table.php` - id, church_event_id, event_checklist_id, executed_by, completed_at
+- [ ] `create_event_checklist_item_executions_table.php` - id, execution_id, item_id, is_completed, notes
+- [ ] `create_event_evaluations_table.php` - id, church_event_id, title, questions
+- [ ] `create_event_evaluation_responses_table.php` - id, evaluation_id, user_id, responses
+- [ ] `create_event_tasks_table.php` - id, church_event_id, title, description, assigned_to, due_date, status
+- [ ] `create_event_resources_table.php` - id, name, type, quantity, location
+
+**Views Faltantes:**
+- [ ] `/resources/views/admin/events/checklists/index.blade.php` - Modelos de checklist
+- [ ] `/resources/views/admin/events/checklists/execute.blade.php` - Execução de checklist
+- [ ] `/resources/views/admin/events/evaluations/index.blade.php` - Histórico de avaliações
+- [ ] `/resources/views/admin/events/evaluations/create.blade.php` - Criar avaliação
+- [ ] `/resources/views/admin/events/evaluations/respond.blade.php` - Formulário de resposta
+- [ ] `/resources/views/admin/events/tasks/index.blade.php` - Gestão de tarefas
+- [ ] `/resources/views/admin/events/resources/index.blade.php` - Gestão de recursos
+
+**Features Faltantes:**
+- [ ] Run of Show automatizado com timeline
+- [ ] Checklists personalizáveis por tipo de evento
+- [ ] Sistema de atribuição automática de tarefas
+- [ ] Notificações de pendências
+- [ ] Formulários de feedback com métricas
+- [ ] Relatórios de satisfação pós-evento
+- [ ] Controle de recursos e equipamentos
+- [ ] Timeline visual do evento
+
+**4. ADMINISTRAÇÃO GERAL - 5% FALTANTE**
+
+**Controllers Faltantes:**
+- [ ] `MeetingMinutesController.php` - Gestão de atas de reunião
+- [ ] `MeetingController.php` - Agendamento de reuniões
+- [ ] `OfficialDocumentController.php` - Documentos oficiais (estatuto, regimento)
+
+**Models Faltantes:**
+- [ ] `Meeting.php` - Informações da reunião
+- [ ] `MeetingMinutes.php` - Ata da reunião
+- [ ] `MeetingParticipant.php` - Participantes
+- [ ] `OfficialDocument.php` - Documentos institucionais
+
+**Migrations Faltantes:**
+- [ ] `create_meetings_table.php` - id, title, description, scheduled_at, location, meeting_type
+- [ ] `create_meeting_minutes_table.php` - id, meeting_id, content, approved_by, approved_at
+- [ ] `create_meeting_participants_table.php` - id, meeting_id, user_id, role, attended
+- [ ] `create_official_documents_table.php` - id, title, content, document_type, approved_at, version
+
+**Views Faltantes:**
+- [ ] `/resources/views/admin/meetings/index.blade.php` - Lista de reuniões
+- [ ] `/resources/views/admin/meetings/create.blade.php` - Agendar reunião
+- [ ] `/resources/views/admin/meetings/minutes/index.blade.php` - Histórico de atas
+- [ ] `/resources/views/admin/meetings/minutes/create.blade.php` - Redigir ata
+- [ ] `/resources/views/admin/documents/official/index.blade.php` - Documentos oficiais
+
+**Features Faltantes:**
+- [ ] Geração automática de atas a partir de gravações
+- [ ] Sistema de aprovação de atas
+- [ ] Histórico de decisões tomadas
+- [ ] Controle de versão de documentos
+- [ ] Assinatura digital de documentos
+- [ ] Alertas de reuniões agendadas
+
+**5. FINANCEIRO - 5% FALTANTE**
+
+**Controllers Faltantes:**
+- [ ] `BankIntegrationController.php` - Integração bancária
+- [ ] `BankReconciliationController.php` - Conciliação bancária
+- [ ] `FinancialReportController.php` - Relatórios financeiros avançados
+
+**Models Faltantes:**
+- [ ] `BankAccount.php` - Contas bancárias
+- [ ] `BankTransaction.php` - Transações bancárias
+- [ ] `BankReconciliation.php` - Conciliação
+- [ ] `FinancialReport.php` - Relatórios gerados
+
+**Migrations Faltantes:**
+- [ ] `create_bank_accounts_table.php` - id, bank_name, agency, account_number, account_type
+- [ ] `create_bank_transactions_table.php` - id, bank_account_id, date, description, amount, type
+- [ ] `create_bank_reconciliations_table.php` - id, bank_account_id, reconciliation_date, status
+- [ ] `create_financial_reports_table.php` - id, title, content, report_type, generated_at
+
+**Views Faltantes:**
+- [ ] `/resources/views/admin/finance/bank/index.blade.php` - Contas bancárias
+- [ ] `/resources/views/admin/finance/bank/reconciliation.blade.php` - Conciliação
+- [ ] `/resources/views/admin/finance/reports/index.blade.php` - Relatórios financeiros
+
+**Features Faltantes:**
+- [ ] Importação automática de extratos bancários
+- [ ] Conciliação bancária inteligente
+- [ ] Relatórios DRE completo
+- [ ] Projeções de fluxo de caixa
+- [ ] Análise de tendências financeiras
+
+**6. RELATÓRIOS E DASHBOARDS - 30% FALTANTE**
+
+**Controllers Faltantes:**
+- [ ] `ReportController.php` - Central de relatórios
+- [ ] `DashboardController.php` - Dashboards personalizados
+- [ ] `AnalyticsController.php` - Análise de dados
+- [ ] `KpiController.php` - Indicadores chave
+
+**Models Faltantes:**
+- [ ] `Report.php` - Configurações de relatórios
+- [ ] `Dashboard.php` - Configurações de dashboard
+- [ ] `Kpi.php` - Indicadores de performance
+- [ ] `AnalyticsEvent.php` - Eventos para analytics
+
+**Migrations Faltantes:**
+- [ ] `create_reports_table.php` - id, title, description, query, parameters, is_active
+- [ ] `create_dashboards_table.php` - id, name, description, layout, user_id
+- [ ] `create_kpis_table.php` - id, name, description, calculation_method, target, current_value
+- [ ] `create_analytics_events_table.php` - id, event_type, user_id, data, created_at
+
+**Views Faltantes:**
+- [ ] `/resources/views/admin/reports/index.blade.php` - Central de relatórios
+- [ ] `/resources/views/admin/reports/create.blade.php` - Criar relatório
+- [ ] `/resources/views/admin/dashboards/index.blade.php` - Lista de dashboards
+- [ ] `/resources/views/admin/dashboards/show.blade.php` - Visualização do dashboard
+- [ ] `/resources/views/admin/analytics/index.blade.php` - Analytics geral
+
+**Features Faltantes:**
+- [ ] Dashboard pastoral com métricas espirituais
+- [ ] Relatórios de crescimento mensal automático
+- [ ] Análise de engajamento ministerial
+- [ ] KPIs personalizáveis por ministério
+- [ ] Gráficos interativos com filtros
+- [ ] Exportação em PDF/Excel
+- [ ] Agendamento de relatórios automáticos
+- [ ] Comparativos históricos
+
+**7. NOTIFICAÇÕES E ALERTAS - 25% FALTANTE**
+
+**Controllers Faltantes:**
+- [ ] `NotificationController.php` - Gestão de notificações
+- [ ] `NotificationTemplateController.php` - Templates de notificação
+- [ ] `AlertController.php` - Sistema de alertas
+- [ ] `ReminderController.php` - Lembretes automáticos
+
+**Models Faltantes:**
+- [ ] `Notification.php` - Notificações enviadas
+- [ ] `NotificationTemplate.php` - Templates padronizados
+- [ ] `Alert.php` - Alertas configurados
+- [ ] `Reminder.php` - Lembretes agendados
+
+**Migrations Faltantes:**
+- [ ] `create_notifications_table.php` - id, user_id, title, message, type, read_at
+- [ ] `create_notification_templates_table.php` - id, title, content, template_type, variables
+- [ ] `create_alerts_table.php` - id, title, condition, action, is_active
+- [ ] `create_reminders_table.php` - id, user_id, title, message, scheduled_at, sent_at
+
+**Views Faltantes:**
+- [ ] `/resources/views/admin/notifications/index.blade.php` - Histórico de notificações
+- [ ] `/resources/views/admin/notifications/templates/index.blade.php` - Templates
+- [ ] `/resources/views/admin/alerts/index.blade.php` - Configuração de alertas
+- [ ] `/resources/views/admin/reminders/index.blade.php` - Gestão de lembretes
+
+**Features Faltantes:**
+- [ ] Sistema de notificações push/email/SMS
+- [ ] Alertas de aniversariantes automáticos
+- [ ] Lembretes automáticos de tarefas
+- [ ] Notificações por permissão/role
+- [ ] Histórico de comunicações
+- [ ] Taxas de entrega e abertura
+- [ ] Personalização por usuário/ministério
+
+**8. API PÚBLICA - 40% FALTANTE**
+
+**Controllers Faltantes:**
+- [ ] `Api/V1/AuthController.php` - Autenticação via API
+- [ ] `Api/V1/MemberController.php` - CRUD de membros via API
+- [ ] `Api/V1/EventController.php` - Gestão de eventos via API
+- [ ] `Api/V1/DonationController.php` - Doações via API
+- [ ] `Api/V1/NotificationController.php` - Notificações via API
+
+**Middleware Faltantes:**
+- [ ] `ApiAuthMiddleware.php` - Validação de tokens
+- [ ] `ApiRateLimitMiddleware.php` - Controle de rate limit
+- [ ] `ApiCorsMiddleware.php` - Configuração CORS
+
+**Models Faltantes:**
+- [ ] `ApiToken.php` - Tokens de acesso à API
+- [ ] `ApiLog.php` - Logs de requisições à API
+- [ ] `ApiUsage.php` - Estatísticas de uso
+
+**Migrations Faltantes:**
+- [ ] `create_api_tokens_table.php` - id, user_id, token, permissions, expires_at
+- [ ] `create_api_logs_table.php` - id, endpoint, method, user_id, response_code, response_time
+- [ ] `create_api_usage_table.php` - id, date, endpoint, requests_count
+
+**Routes Faltantes:**
+- [ ] `/routes/api/v1/auth.php` - Autenticação
+- [ ] `/routes/api/v1/members.php` - Membros
+- [ ] `/routes/api/v1/events.php` - Eventos
+- [ ] `/routes/api/v1/donations.php` - Doações
+- [ ] `/routes/api/v1/notifications.php` - Notificações
+
+**Features Faltantes:**
+- [ ] Endpoints RESTful completos
+- [ ] Autenticação via OAuth2/Bearer tokens
+- [ ] Rate limiting por usuário
+- [ ] Documentação OpenAPI/Swagger
+- [ ] Versionamento da API
+- [ ] Webhooks para integrações
+- [ ] Sandbox para testes
+- [ ] Monitoramento de uso da API
+
+---
+
+## 🤖 **PROMPT PARA AGENTE IMPLEMENTADOR**
+
+```
+Você é o AGENT_ARCHITECT_DATA e sua missão é completar os módulos faltantes do sistema CRM da igreja.
+
+## TAREFAS ESPECÍFICAS:
+
+1. **MÓDULO DE COMUNICAÇÃO E MÍDIA (20% FALTANTE)**
+   - Criar MediaController para upload de vídeos/áudios/imagens
+   - Implementar Model Media com categorias
+   - Criar views para galeria e player de mídia
+   - Adicionar agendamento automático de posts
+   - Implementar banco de mídia organizado
+
+2. **MÓDULO DE LOUVOR (15% FALTANTE)**
+   - Criar WorshipSongController para repertório
+   - Implementar Models: WorshipSong, WorshipSetlist
+   - Criar views para gestão de repertório musical
+   - Adicionar histórico de músicas por culto
+   - Integrar com planejamento de cultos
+
+3. **MÓDULO DE EVENTOS (15% FALTANTE)**
+   - Criar EventChecklistController e EventEvaluationController
+   - Implementar Models: EventChecklist, EventEvaluation
+   - Criar views para checklists e avaliações
+   - Adicionar Run of Show automatizado
+   - Implementar formulários de feedback
+
+4. **MÓDULO DE RELATÓRIOS (30% FALTANTE)**
+   - Criar ReportController com KPIs ministeriais
+   - Implementar DashboardController com analytics
+   - Criar views para relatórios de crescimento
+   - Adicionar análise de engajamento
+   - Implementar métricas espirituais
+
+5. **MÓDULO DE NOTIFICAÇÕES (25% FALTANTE)**
+   - Criar NotificationController para alertas
+   - Implementar Models: Notification, NotificationTemplate
+   - Criar sistema de notificações push/email
+   - Adicionar alertas de aniversariantes
+   - Implementar lembretes automáticos
+
+6. **API PÚBLICA (40% FALTANTE)**
+   - Criar ApiController com endpoints REST
+   - Implementar routes /api/v1/ para mobile
+   - Adicionar autenticação via tokens
+   - Criar endpoints para inscrições e doações
+   - Implementar consulta de membros
+
+## REQUISITOS:
+- Seguir padrão Laravel 12 + AdminLTE 4
+- Implementar RBAC em cada módulo
+- Criar migrations, models, controllers, views
+- Adicionar validações e segurança
+- Manter organização por prefixo de rota
+- Usar Bootstrap 5 para UI
+- Implementar logs de auditoria
+
+## ORDEM DE EXECUÇÃO:
+1. Comunicação e Mídia
+2. Louvor e Adoração  
+3. Eventos e Checklists
+4. Relatórios e Dashboards
+5. Notificações e Alertas
+6. API Pública
+
+Execute cada módulo completamente antes de passar para o próximo.
+```

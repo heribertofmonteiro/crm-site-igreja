@@ -4,95 +4,132 @@ namespace App\Http\Controllers;
 
 use App\Models\FinancialAccount;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class FinancialAccountController extends Controller
 {
-    public function __construct()
+    public function index(): View
     {
-        $this->middleware('auth');
-        $this->middleware('permission:financial_accounts.view')->only(['index', 'show']);
-        $this->middleware('permission:financial_accounts.create')->only(['create', 'store']);
-        $this->middleware('permission:financial_accounts.edit')->only(['edit', 'update']);
-        $this->middleware('permission:financial_accounts.delete')->only('destroy');
+        $accounts = FinancialAccount::with(['responsible', 'transactions' => function ($query) {
+            $query->latest()->limit(5);
+        }])
+        ->withCount('transactions')
+        ->active()
+        ->latest()
+        ->paginate(15);
+        
+        return view('admin.finance.accounts.index', compact('accounts'));
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function create(): View
     {
-        $financialAccounts = FinancialAccount::paginate(10);
-        return view('finance.financial_accounts.index', compact('financialAccounts'));
+        return view('admin.finance.accounts.create');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('finance.financial_accounts.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'type' => 'required|in:checking,savings,investment',
-            'balance' => 'required|numeric|min:0',
-            'description' => 'nullable|string',
+            'account_type' => 'required|in:checking,savings,investment,credit_card',
+            'bank_name' => 'nullable|string|max:255',
+            'agency_number' => 'nullable|string|max:50',
+            'account_number' => 'nullable|string|max:50',
+            'opening_balance' => 'required|numeric|min:0',
+            'currency' => 'required|string|max:3',
+            'responsible_id' => 'nullable|exists:users,id',
+            'is_active' => 'boolean',
+            'notes' => 'nullable|string',
         ]);
 
-        FinancialAccount::create($request->all());
+        FinancialAccount::create([
+            'name' => $request->name,
+            'account_type' => $request->account_type,
+            'bank_name' => $request->bank_name,
+            'agency_number' => $request->agency_number,
+            'account_number' => $request->account_number,
+            'opening_balance' => $request->opening_balance,
+            'current_balance' => $request->opening_balance,
+            'currency' => $request->currency,
+            'responsible_id' => $request->responsible_id,
+            'is_active' => $request->boolean('is_active', true),
+            'notes' => $request->notes,
+        ]);
 
-        return redirect()->route('finance.financial_accounts.index')
-            ->with('success', 'Conta financeira criada com sucesso.');
+        return redirect()
+            ->route('admin.finance.accounts.index')
+            ->with('success', 'Conta financeira criada com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(FinancialAccount $financialAccount)
+    public function show(FinancialAccount $account): View
     {
-        return view('finance.financial_accounts.show', compact('financialAccount'));
+        $account->load(['responsible', 'transactions' => function ($query) {
+            $query->with(['category', 'creator'])->latest()->limit(20);
+        }]);
+        
+        return view('admin.finance.accounts.show', compact('account'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(FinancialAccount $financialAccount)
+    public function edit(FinancialAccount $account): View
     {
-        return view('finance.financial_accounts.edit', compact('financialAccount'));
+        return view('admin.finance.accounts.edit', compact('account'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, FinancialAccount $financialAccount)
+    public function update(Request $request, FinancialAccount $account): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'type' => 'required|in:checking,savings,investment',
-            'balance' => 'required|numeric|min:0',
-            'description' => 'nullable|string',
+            'account_type' => 'required|in:checking,savings,investment,credit_card',
+            'bank_name' => 'nullable|string|max:255',
+            'agency_number' => 'nullable|string|max:50',
+            'account_number' => 'nullable|string|max:50',
+            'currency' => 'required|string|max:3',
+            'responsible_id' => 'nullable|exists:users,id',
+            'is_active' => 'boolean',
+            'notes' => 'nullable|string',
         ]);
 
-        $financialAccount->update($request->all());
+        $account->update([
+            'name' => $request->name,
+            'account_type' => $request->account_type,
+            'bank_name' => $request->bank_name,
+            'agency_number' => $request->agency_number,
+            'account_number' => $request->account_number,
+            'currency' => $request->currency,
+            'responsible_id' => $request->responsible_id,
+            'is_active' => $request->boolean('is_active'),
+            'notes' => $request->notes,
+        ]);
 
-        return redirect()->route('finance.financial_accounts.index')
-            ->with('success', 'Conta financeira atualizada com sucesso.');
+        return redirect()
+            ->route('admin.finance.accounts.index')
+            ->with('success', 'Conta financeira atualizada com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(FinancialAccount $financialAccount)
+    public function destroy(FinancialAccount $account): RedirectResponse
     {
-        $financialAccount->delete();
+        if (!$account->canBeDeleted()) {
+            return back()->withErrors(['error' => 'Não é possível excluir uma conta com transações.']);
+        }
 
-        return redirect()->route('finance.financial_accounts.index')
-            ->with('success', 'Conta financeira removida com sucesso.');
+        $account->delete();
+
+        return redirect()
+            ->route('admin.finance.accounts.index')
+            ->with('success', 'Conta financeira excluída com sucesso!');
+    }
+
+    public function updateBalance(FinancialAccount $account): RedirectResponse
+    {
+        $account->updateBalance();
+        
+        return back()->with('success', 'Saldo atualizado com sucesso!');
+    }
+
+    public function toggleStatus(FinancialAccount $account): RedirectResponse
+    {
+        $account->update(['is_active' => !$account->is_active]);
+        
+        return back()->with('success', 'Status da conta atualizado!');
     }
 }

@@ -3,14 +3,60 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    /**
+     * Display a listing of users.
+     */
+    public function index(): View
+    {
+        $users = User::paginate(10);
+        return view('admin.profiles.index', compact('users'));
+    }
+
+    /**
+     * Show the form for creating a new user.
+     */
+    public function create(): View
+    {
+        return view('admin.profiles.create');
+    }
+
+    /**
+     * Store a newly created user in storage.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'nullable|string',
+        ]);
+
+        $validated['password'] = Hash::make($validated['password']);
+
+        User::create($validated);
+
+        return redirect()->route('admin.profiles.index')->with('success', 'Usuário criado com sucesso.');
+    }
+
+    /**
+     * Display the specified user.
+     */
+    public function show(User $user): View
+    {
+        return view('admin.profiles.show', compact('user'));
+    }
+
     /**
      * Display the user's profile form.
      */

@@ -32,7 +32,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($members as $member)
+                @foreach($volunteerRoles as $member)
                 <tr>
                     <td>{{ $member->id }}</td>
                     <td>{{ $member->name }}</td>
@@ -65,7 +65,7 @@
                 @endforeach
             </tbody>
         </table>
-        {{ $members->links() }}
+        {{ $volunteerRoles->links() }}
     </div>
 </div>
 @stop

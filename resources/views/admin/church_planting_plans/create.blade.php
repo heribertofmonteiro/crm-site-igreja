@@ -12,7 +12,7 @@
         <h3 class="card-title">Criar Novo Plano de Plantação</h3>
     </div>
     <div class="card-body">
-        <form action="{{ route('expansion.church-planting-plans.store') }}" method="POST">
+        <form action="{{ route('expansion.plans.store') }}" method="POST">
             @csrf
             <div class="form-group">
                 <label for="name">Nome</label>
@@ -56,7 +56,7 @@
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Salvar</button>
-            <a href="{{ route('expansion.church-planting-plans.index') }}" class="btn btn-secondary">Cancelar</a>
+            <a href="{{ route('expansion.plans.index') }}" class="btn btn-secondary">Cancelar</a>
         </form>
     </div>
 </div>

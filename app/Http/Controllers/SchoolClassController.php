@@ -11,10 +11,10 @@ class SchoolClassController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission:education.classes.view')->only(['index', 'show']);
-        $this->middleware('permission:education.classes.create')->only(['create', 'store']);
-        $this->middleware('permission:education.classes.edit')->only(['edit', 'update']);
-        $this->middleware('permission:education.classes.delete')->only('destroy');
+        $this->middleware('permission:education_classes.view')->only(['index', 'show']);
+        $this->middleware('permission:education_classes.create')->only(['create', 'store']);
+        $this->middleware('permission:education_classes.edit')->only(['edit', 'update']);
+        $this->middleware('permission:education_classes.delete')->only('destroy');
     }
 
     /**

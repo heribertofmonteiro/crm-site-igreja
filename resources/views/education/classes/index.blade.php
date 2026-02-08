@@ -10,7 +10,7 @@
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Lista de Turmas</h3>
-        @can('education.classes.create')
+        @can('education_classes.create')
         <div class="card-tools">
             <a href="{{ route('education.classes.create') }}" class="btn btn-primary btn-sm">
                 <i class="fas fa-plus"></i> Nova Turma
@@ -35,19 +35,19 @@
                     <td>{{ $class->id }}</td>
                     <td>{{ $class->name }}</td>
                     <td>{{ $class->age_group }}</td>
-                    <td>{{ $class->teacher->name ?? '-' }}</td>
+                    <td>{{ $class->teacher?->name ?? '-' }}</td>
                     <td>
-                        @can('education.classes.view')
+                        @can('education_classes.view')
                         <a href="{{ route('education.classes.show', $class) }}" class="btn btn-info btn-sm">
                             <i class="fas fa-eye"></i>
                         </a>
                         @endcan
-                        @can('education.classes.edit')
+                        @can('education_classes.edit')
                         <a href="{{ route('education.classes.edit', $class) }}" class="btn btn-warning btn-sm">
                             <i class="fas fa-edit"></i>
                         </a>
                         @endcan
-                        @can('education.classes.delete')
+                        @can('education_classes.delete')
                         <form action="{{ route('education.classes.destroy', $class) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
